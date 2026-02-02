@@ -177,7 +177,3 @@ else:
 
 driver.quit()
 
-send_telegram_alert()
-send_email_alert()
-
-driver.quit()

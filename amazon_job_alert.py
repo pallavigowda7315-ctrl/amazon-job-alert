@@ -129,20 +129,21 @@ print("🔍 Monitoring Amazon Jobs (EMAIL + TELEGRAM enabled)...")
 #     return len(job_cards) > 0 and len(no_jobs) == 0
 
 def jobs_available():
+    # Give JS time to fully render
+    time.sleep(5)
+    # Look for real job links
+    job_links = driver.find_elements(
+        By.XPATH,
+        "//a[contains(@href, '/job/')]"
+    )
+    if len(job_links) == 0:
+        return False
+    # Extra safety: still respect explicit "no jobs" message
     page_text = driver.page_source.lower()
+    if "no jobs available" in page_text:
+        return False
 
-    no_jobs_phrases = [
-        "sorry, there are no jobs available",
-        "there are no jobs available that match your search"
-    ]
-
-    for phrase in no_jobs_phrases:
-        if phrase in page_text:
-            return False
-
-    # If the "no jobs" message is NOT present, jobs exist
-    return True
-    
+    return True  
 
 # ==========================
 # MAIN LOOP

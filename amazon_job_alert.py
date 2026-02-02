@@ -22,11 +22,20 @@ SMTP_PORT = 587
 
 EMAIL_SENDER = "pallavigowda7315@gmail.com"
 EMAIL_PASSWORD = "mdkr cetm licj ydyv"
-EMAIL_RECEIVER = "pallavigowda7315@gmail.com"
+EMAIL_RECEIVERS = [
+    "pallavigowda7315@gmail.com",
+    "nayakakiran31@gmail.com"
+]
 
 # ---- TELEGRAM ----
-BOT_TOKEN = "8501579391"
-CHAT_ID = "7990651646"
+BOT_TOKENs = [
+    "8501579391:AAGCcwdmeKwSZIcib2f-syn2Li25Iv9_zbw",
+    "8167432788:AAHp_nZp3kI6hTjOfWtJ2SNXfSJeBlzVnKk"
+]
+CHAT_IDS = [
+    "7990651646",     # You
+    "5901877925"      # Kiran
+]
 
 # ==========================
 # ALERT FUNCTIONS
@@ -41,12 +50,30 @@ def send_email_alert():
     )
     msg["Subject"] = "🚀 Amazon Job Alert (LE3 5)"
     msg["From"] = EMAIL_SENDER
-    msg["To"] = EMAIL_RECEIVER
+    msg["To"] = ", ".join(EMAIL_RECEIVERS)
 
     with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
         server.starttls()
         server.login(EMAIL_SENDER, EMAIL_PASSWORD)
-        server.send_message(msg)
+        server.sendmail(EMAIL_SENDER, EMAIL_RECEIVERS, msg.as_string())
+
+# def send_telegram_alert():
+#     message = (
+#         "🚨 *AMAZON JOBS AVAILABLE!*\n\n"
+#         "📍 Location: LE3 5\n"
+#         "🕒 Part time\n"
+#         "📏 Within 30 miles\n\n"
+#         f"👉 Apply now:\n{URL}"
+#     )
+
+#     requests.post(
+#         f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+#         data={
+#             "chat_id": CHAT_ID,
+#             "text": message,
+#             "parse_mode": "Markdown"
+#         }
+#     )
 
 def send_telegram_alert():
     message = (
@@ -57,14 +84,15 @@ def send_telegram_alert():
         f"👉 Apply now:\n{URL}"
     )
 
-    requests.post(
-        f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
-        data={
-            "chat_id": CHAT_ID,
-            "text": message,
-            "parse_mode": "Markdown"
-        }
-    )
+    for chat_id in CHAT_IDS:
+        requests.post(
+            f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+            data={
+                "chat_id": chat_id,
+                "text": message,
+                "parse_mode": "Markdown"
+            }
+        )
 
 # ==========================
 # SELENIUM SETUP

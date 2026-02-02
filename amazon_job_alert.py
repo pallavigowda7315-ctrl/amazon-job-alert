@@ -117,16 +117,32 @@ print("🔍 Monitoring Amazon Jobs (EMAIL + TELEGRAM enabled)...")
 # ==========================
 # JOB CHECK LOGIC
 # ==========================
+# def jobs_available():
+#     no_jobs = driver.find_elements(
+#         By.XPATH,
+#         "//*[contains(text(),'Sorry, there are no jobs available')]"
+#     )
+#     job_cards = driver.find_elements(
+#         By.CSS_SELECTOR,
+#         "a[data-testid='job-card'], div.job-card"
+#     )
+#     return len(job_cards) > 0 and len(no_jobs) == 0
+
 def jobs_available():
-    no_jobs = driver.find_elements(
-        By.XPATH,
-        "//*[contains(text(),'Sorry, there are no jobs available')]"
-    )
-    job_cards = driver.find_elements(
-        By.CSS_SELECTOR,
-        "a[data-testid='job-card'], div.job-card"
-    )
-    return len(job_cards) > 0 and len(no_jobs) == 0
+    page_text = driver.page_source.lower()
+
+    no_jobs_phrases = [
+        "sorry, there are no jobs available",
+        "there are no jobs available that match your search"
+    ]
+
+    for phrase in no_jobs_phrases:
+        if phrase in page_text:
+            return False
+
+    # If the "no jobs" message is NOT present, jobs exist
+    return True
+    
 
 # ==========================
 # MAIN LOOP

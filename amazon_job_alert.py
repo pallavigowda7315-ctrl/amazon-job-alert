@@ -94,9 +94,14 @@ def send_telegram_alert():
 # ==========================
 # SELENIUM SETUP
 # ==========================
+
 options = webdriver.ChromeOptions()
 options.add_argument("--headless=new")
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
+options.add_argument("--disable-gpu")
 options.add_argument("--window-size=1920,1080")
+
 
 driver = webdriver.Chrome(
     service=Service(ChromeDriverManager().install()),
@@ -126,24 +131,36 @@ def jobs_available():
 # ==========================
 # MAIN LOOP
 # ==========================
-alert_sent = False
+# alert_sent = False
 
-while not alert_sent:
-    time.sleep(8)
+# while not alert_sent:
+#     time.sleep(8)
 
-    if jobs_available():
-        print("🎉 REAL JOBS FOUND!")
-        send_email_alert()
-        send_telegram_alert()
-        print("📧 Email + 📱 Telegram alerts sent!")
-        alert_sent = True
-        break
-    else:
-        print("⏳ No jobs yet. Checking again...")
+#     if jobs_available():
+#         print("🎉 REAL JOBS FOUND!")
+#         send_email_alert()
+#         send_telegram_alert()
+#         print("📧 Email + 📱 Telegram alerts sent!")
+#         alert_sent = True
+#         break
+#     else:
+#         print("⏳ No jobs yet. Checking again...")
 
-    time.sleep(CHECK_INTERVAL)
-    driver.refresh()
-    
+#     time.sleep(CHECK_INTERVAL)
+#     driver.refresh()
+
+print("🔍 Checking Amazon Jobs once (GitHub Actions mode)...")
+
+if jobs_available():
+    print("🎉 REAL JOBS FOUND!")
+    send_email_alert()
+    send_telegram_alert()
+    print("📧 Email + 📱 Telegram alerts sent!")
+else:
+    print("❌ No jobs available at the moment.")
+
+driver.quit()
+
 send_telegram_alert()
 send_email_alert()
 

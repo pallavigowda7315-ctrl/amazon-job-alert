@@ -143,5 +143,8 @@ while not alert_sent:
 
     time.sleep(CHECK_INTERVAL)
     driver.refresh()
+    
+send_telegram_alert()
+send_email_alert()
 
 driver.quit()

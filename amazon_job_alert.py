@@ -1,6 +1,9 @@
 import time
 import smtplib
 import requests
+import os
+import requests
+
 from email.mime.text import MIMEText
 
 from selenium import webdriver
@@ -21,21 +24,16 @@ SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 
 EMAIL_SENDER = "pallavigowda7315@gmail.com"
-EMAIL_PASSWORD = "mdkr cetm licj ydyv"
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 EMAIL_RECEIVERS = [
     "pallavigowda7315@gmail.com",
     "nayakakiran31@gmail.com"
 ]
 
 # ---- TELEGRAM ----
-BOT_TOKENs = [
-    "8501579391:AAGCcwdmeKwSZIcib2f-syn2Li25Iv9_zbw",
-    "8167432788:AAHp_nZp3kI6hTjOfWtJ2SNXfSJeBlzVnKk"
-]
-CHAT_IDS = [
-    "7990651646",     # You
-    "5901877925"      # Kiran
-]
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHAT_IDS = os.getenv("CHAT_ID").split(",")
 
 # ==========================
 # ALERT FUNCTIONS
@@ -88,12 +86,11 @@ def send_telegram_alert():
         requests.post(
             f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
             data={
-                "chat_id": chat_id,
+                "chat_id": chat_id.strip(),
                 "text": message,
                 "parse_mode": "Markdown"
             }
         )
-
 # ==========================
 # SELENIUM SETUP
 # ==========================

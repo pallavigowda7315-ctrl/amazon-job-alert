@@ -2,7 +2,7 @@ name: Amazon Job Checker
 
 on:
   schedule:
-     - cron: "0,30 * * * *"  
+     - cron: "0,30 * * * *" # Run every 0 and 30 min past the hour 
   workflow_dispatch:
 
 jobs:

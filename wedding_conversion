@@ -1,35 +1,30 @@
 import os
 import subprocess
 
-# ---- PATHS (edit only if needed) ----
-HANDBRAKE_CLI = r"C:\Program Files\HandBrake\HandBrakeCLI.exe"
+HANDBRAKE = r"C:\Program Files\HandBrake\HandBrakeCLI.exe"
 
 INPUT_DIR = r"D:\Kiran & Pallavi Wedding  18-08-2025\Original Photos & Videos\Wedding 18-08-2025\Wedding 18-08-2025\Candid Video"
-
 OUTPUT_DIR = r"D:\Kiran & Pallavi Wedding  18-08-2025\Original Photos & Videos\Wedding 18-08-2025\Wedding 18-08-2025\Encrypted wedding video"
 
-# Create output folder if it doesn't exist
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# Video extensions to process
-VIDEO_EXTENSIONS = (".mp4", ".mov", ".mkv", ".avi", ".mts", ".m2ts", ".hevc")
+for file in os.listdir(INPUT_DIR):
+    if file.lower().endswith((".mp4", ".mov", ".mkv", ".mts", ".m2ts", ".avi")):
+        src = os.path.join(INPUT_DIR, file)
+        dst = os.path.join(
+            OUTPUT_DIR,
+            os.path.splitext(file)[0] + "_converted.mp4"
+        )
 
-for filename in os.listdir(INPUT_DIR):
-    if filename.lower().endswith(VIDEO_EXTENSIONS):
-        input_path = os.path.join(INPUT_DIR, filename)
-        output_name = os.path.splitext(filename)[0] + "_converted.mp4"
-        output_path = os.path.join(OUTPUT_DIR, output_name)
+        print(f"Encoding: {file}")
 
-        command = [
-            HANDBRAKE_CLI,
-            "-i", input_path,
-            "-o", output_path,
-            "-e", "x264",          # H.264 (very compatible)
-            "-q", "20",            # Quality (18–22 is ideal)
+        subprocess.run([
+            HANDBRAKE,
+            "-i", src,
+            "-o", dst,
+            "-e", "x264",
+            "-q", "20",
             "--preset", "General/High Profile"
-        ]
+        ], check=True)
 
-        print(f"Converting: {filename}")
-        subprocess.run(command, check=True)
-
-print("✅ All wedding videos converted successfully!")
+print("✅ All wedding videos encoded successfully.")

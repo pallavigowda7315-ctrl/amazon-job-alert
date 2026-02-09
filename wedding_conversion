@@ -18,13 +18,17 @@ for file in os.listdir(INPUT_DIR):
 
         print(f"Encoding: {file}")
 
-        subprocess.run([
+        subprocess.run([                       
             HANDBRAKE,
             "-i", src,
             "-o", dst,
             "-e", "x264",
             "-q", "20",
-            "--preset", "General/High Profile"
-        ], check=True)
+            "--encoder-preset", "medium",
+            "--encoder-profile", "high",
+            "--encoder-level", "4.2",
+            "--aencoder", "aac",
+            "--mixdown", "stereo"
+            ], check=True)
 
 print("✅ All wedding videos encoded successfully.")

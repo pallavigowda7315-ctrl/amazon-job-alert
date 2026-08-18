@@ -1,0 +1,21 @@
+Append these 3 lines to the END of the repo's ROOT .gitignore
+(the one at msc-dsr-projects-group-02/.gitignore, NOT inside dashboard/):
+
+# Force-track the dashboard's model integration code and the one real model
+# artifact, despite the blanket models/ and *.joblib excludes above
+!dashboard/models/
+!dashboard/models/artifacts/
+!dashboard/models/artifacts/dv_severity_model.joblib
+
+Why: the existing .gitignore has "models/" and "*.joblib" as blanket excludes.
+That's why dashboard/models/ (all the .py integration code) never made it into
+this zip at all -- right now, anyone who clones the repo fresh gets a BROKEN
+app, because pages/AI_Prediction.py imports from a models/ folder that git
+never tracked. These 3 lines fix that AND allow just this one specific model
+file through, without opening the door to every stray .pkl/.joblib anyone
+else's notebook might produce.
+
+After adding these lines, run:
+    git add dashboard/models/
+    git add -f dashboard/models/artifacts/dv_severity_model.joblib   (once Devanshi shares it)
+    git commit -m "Fix: track dashboard model integration code + real severity model"

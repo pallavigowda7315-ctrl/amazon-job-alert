@@ -1,0 +1,58 @@
+# =============================================================================
+# CardioScope dashboard -- .gitignore
+# =============================================================================
+# NOTE ON THE MODEL FILE: models/artifacts/dv_severity_model_improved.joblib
+# is ~8MB, well under GitHub's 100MB per-file limit -- it is intentionally
+# NOT excluded here and NOT using Git LFS. It's part of what makes the app
+# actually work when someone clones this repo, so it's meant to be tracked
+# normally. If a future, much larger model is swapped in (e.g. >50-100MB),
+# switch to Git LFS at that point (`git lfs track "*.joblib"`).
+# =============================================================================
+
+# ---- Python environments ----
+venv/
+.venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ---- OS / editor cruft ----
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# ---- Streamlit ----
+.streamlit/secrets.toml   # never commit secrets/API keys if any are added later
+
+# ---- Local runtime output (not source, regenerated at runtime) ----
+reports/*.pdf
+reports/*.html
+!reports/README.md        # keep the explanatory README, exclude only generated output
+
+# ---- Real patient / test ECG data -- NEVER commit real recordings ----
+# The only ECG data that should ever be tracked in this repo is the
+# synthetically-generated demo waveform, which is created in-code
+# (utils/ecg_loader.load_sample_ecg()) and is never written to disk as a
+# file in the first place. Any real .hea/.dat/.mat/.csv ECG files -- test
+# downloads, real dataset samples, anything from a real patient -- must
+# never be committed. These patterns catch them if anyone drops one into
+# the project folder to test locally:
+*.hea
+*.dat
+*.mat
+sample_uploads/
+test_data/
+local_test_records/
+# If you genuinely need a real WFDB pair tracked for automated testing,
+# add an explicit exception here for that specific file only (matching
+# the pattern already used for the model artefact above) -- never a
+# blanket allow.
+
+# ---- Local env/config ----
+.env
+.env.local
+*.local

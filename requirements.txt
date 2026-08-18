@@ -1,0 +1,28 @@
+# Core app
+streamlit>=1.31          # st.switch_page (>=1.27) and st.page_link (>=1.31) are used
+plotly>=5.18
+pandas>=2.0
+numpy>=1.24
+
+# Signal processing (bandpass filtering, R-peak detection, spectral quality estimates)
+scipy>=1.10               # also used to read .mat signal files (this dataset's real format)
+
+# Optional but recommended
+wfdb>=4.1                # only needed for classic WFDB .dat signal files; this dataset's
+                          # real distribution uses .mat instead, which scipy (above) handles
+reportlab>=4.0           # utils/report_generator.py is kept for reuse even though no current
+                          # page calls it (Clinical Report was folded into Home's 2-page
+                          # simplification) -- only needed if you wire report generation back in
+Pillow>=10.0              # used offline to generate assets/logo.png and assets/banner.png;
+                          # not required at runtime unless you regenerate them
+
+# Real severity classifier (dv_severity_model_improved.joblib) -- the app falls back to
+# the placeholder model automatically if these aren't installed or the artefact file is
+# absent, but install these to actually get real predictions instead of placeholder ones:
+joblib>=1.3
+scikit-learn>=1.9         # IMPORTANT: the shipped artefact's StandardScaler/LabelEncoder
+                          # were pickled with scikit-learn 1.9.0 -- using an older version
+                          # will still load (joblib prints an InconsistentVersionWarning,
+                          # confirmed harmless for this model in testing) but 1.9+ avoids
+                          # the warning and any edge-case pickle incompatibility risk
+lightgbm>=4.0              # the finalised model: LGBM DART reduced (14 feats)
